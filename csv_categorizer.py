@@ -37,10 +37,10 @@ def categorize_csv(filepath, prefix="data"):
         try:
             dictRow = f.iloc[i, :]
             # only last 400 chars, no cleaning though
-            reviewText = dictRow["content"][-400:]
+            reviewText = dictRow["content"][-400:] + " " + dictRow["title"]
             reviewText = clean(reviewText)  # cleaned 400 chars
-            rating = dictRow["rating"]
-            if rating > 5:
+            rating = int(dictRow["rating"])
+            if rating > 4:
                 continue
             reviewerID = dictRow["author"]
             productID = dictRow["product"]
