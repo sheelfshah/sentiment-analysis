@@ -1,14 +1,10 @@
-# takes review data and categorizes it into review classes based on keywords
-
-import csv
-import gzip
-import re
-import json
 import pandas as pd
+import csv
+import re
 from text_cleaner import clean
 
 delivery_keywords = ['late', 'delay', 'wait', 'days',
-                     'shipment', 'shipping', 'deliver', 'early', 'cancel']
+                     'shipment', 'shipping', 'deliver', 'early']
 fake_keywords = ['fake', 'counterfeit', 'knockoff', 'phony', 'fraud',
                  'bogus', 'sham', 'not real', 'not genuine', 'forged', 'scam', 'hoax']
 price_keywords = ['expensive', 'price', 'cost', 'exorbitant', 'cheap',
@@ -17,14 +13,14 @@ faulty_keywords = ['damage', 'broken', 'defect', 'busted', 'smashed', 'not work'
                    'third grade', 'substandard', 'sub standard', 'faulty', 'malfunction', 'nonfunction', 'non function', 'flaw', 'tear', 'torn']
 
 
-def categorize(filepath, prefix="data"):
+def categorize_csv(filepath, prefix="data"):
     try:
-        f = gzip.open(filepath)
+        f = pd.read_csv(filepath, encoding="ISO-8859-1")
     except:
         print("Invalid filepath")
         return
     df = pd.DataFrame(
-        columns=["rating", "reviewerID", "productID", "reviewText"])
+        columns=["rating", "reviewer", "product", "reviewText"])
     df.to_csv(prefix + '_delivery.csv', index=False)
     df.to_csv(prefix + '_fake.csv', index=False)
     df.to_csv(prefix + '_price.csv', index=False)
@@ -37,17 +33,17 @@ def categorize(filepath, prefix="data"):
     writer_fake = csv.writer(csv_fake)
     writer_price = csv.writer(csv_price)
     writer_faulty = csv.writer(csv_faulty)
-    for jsonRow in f:
+    for i in range(f.shape[0]):
         try:
-            dictRow = (json.loads(jsonRow.strip()))
+            dictRow = f.iloc[i, :]
             # only last 400 chars, no cleaning though
-            reviewText = dictRow["reviewText"][-400:]
+            reviewText = dictRow["content"][-400:]
             reviewText = clean(reviewText)  # cleaned 400 chars
-            rating = dictRow["overall"]
-            if rating > 4.5:
+            rating = dictRow["rating"]
+            if rating > 5:
                 continue
-            reviewerID = dictRow["reviewerID"]
-            productID = dictRow["asin"]
+            reviewerID = dictRow["author"]
+            productID = dictRow["product"]
         except:
             # print("Row ignored")   # missing data, or failed json load
             continue
@@ -73,5 +69,4 @@ def categorize(filepath, prefix="data"):
                 break
         #print("Row successfully processed")
     print("File has been processed")
-    f.close()
     return
