@@ -11,6 +11,8 @@ price_keywords = ['expensive', 'price', 'cost', 'exorbitant', 'cheap',
                   'budget', 'money', 'poor', 'rich', 'rate', 'discount', 'deal', 'bargain']
 faulty_keywords = ['damage', 'broken', 'defect', 'busted', 'smashed', 'not work', 'no seal', 'not in work', 'out of order', 'thirdgrade',
                    'third grade', 'substandard', 'sub standard', 'faulty', 'malfunction', 'nonfunction', 'non function', 'flaw', 'tear', 'torn']
+sound_keywords = ['sound', 'quality', 'loud', 'clear', 'clarity', 'bass']
+fake_keywords = sound_keywords
 
 
 def categorize_csv(filepath, prefix="data"):

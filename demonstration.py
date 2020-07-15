@@ -1,6 +1,8 @@
 from csv_categorizer import categorize_csv
 from get_training_data import merge
 from vectorize_training_data import vectorize_prediction_data
+# from model import make_predictions
+import pickle
 import statistics
 
 path_to_scraped_reviews = "data.csv"
@@ -22,7 +24,7 @@ vectorizer_path = ""
 delivery_features, delivery_results = vectorize_prediction_data(
     vectorizer_path, delivery_data)
 fake_features, fake_results = vectorize_prediction_data(
-    fake_path, fake_data)
+    vectorizer_path, fake_data)
 price_features, price_results = vectorize_prediction_data(
     vectorizer_path, price_data)
 faulty_features, faulty_results = vectorize_prediction_data(
